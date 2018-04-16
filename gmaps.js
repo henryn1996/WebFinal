@@ -34,6 +34,57 @@ var getWeather = (latitude,longitude) => {
 });
 	})
 };
+
+var getAddress = (address) => {
+    return new Promise((resolve,reject)=> {
+    request({
+        url: 'http://maps.googleapis.com/maps/api/geocode/json' +
+            '?address=' + encodeURIComponent(address),
+        json: true
+    }, (error, response, body) => {
+        if (error) {
+            reject('Cannot connect to Google Maps');
+            //console.log('Cannot connect to Google Maps');
+        } else if (body.status === 'ZERO_RESULTS') {
+            reject('Cannot find requested address');
+            //console.log('Cannot find requested address');
+        } else if (body.status === 'OK') {
+            resolve({
+                lat: body.results[0].geometry.location.lat,
+                long: body.results[0].geometry.location.lng
+            });
+        }
+    });
+    })
+
+};
+
+var getImage = (keyword) => {
+    return new Promise((resolve,reject)=> {
+    request({
+        url: 'https://pixabay.com/api/?key=7246674-b37ac3e55b379cef1f626bb09&q=' + keyword,
+        json: true
+    }, (error, response, body) => {
+        if (error) {
+            reject('Cannot connect to Google Maps');
+            //console.log('Cannot connect to Google Maps');
+        } else if (body.status === 'ZERO_RESULTS') {
+            reject('Cannot find requested address');
+            //console.log('Cannot find requested address');
+        } else if (body.status === 'OK') {
+            resolve({
+                // lat: body.results[0].geometry.location.lat,
+                // long: body.results[0].geometry.location.lng
+                img: hits.largeImageURL
+            });
+        }
+    });
+    })
+
+};
+
 module.exports = {
-	getWeather
+	getWeather,
+	getAddress,
+	getImage
 };
